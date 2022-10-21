@@ -1,10 +1,11 @@
 <template>
   <div class="flex-col">
     <div class="flex justify-between max-w-3xl pt-8">
-      <div id="heading">
+      <div id="heading" class="flex">
         <h1>
           <span class="text-lg font-bold">Today</span>
         </h1>
+        <p class="text-xs pt-2 pl-1 text-gray-500">{{ getToday }}</p>
       </div>
       <div id="buttons">
         <div>
@@ -212,6 +213,7 @@ export default {
   name: "TodoApp",
   data() {
     return {
+      today: "",
       task: "",
       update: false,
       term: "",
@@ -383,6 +385,12 @@ export default {
       });
       bus.$emit("searchingPagination", test.length);
       return this.updateVisibleTodos(test);
+    },
+    getToday() {
+      var dob = new Date();
+      var dobArr = dob.toDateString().split(" ");
+      var dobFormat = dobArr[0] + " " + dobArr[1] + " " + dobArr[2];
+      return dobFormat;
     },
   },
   created() {

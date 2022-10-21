@@ -1,5 +1,5 @@
 <template>
-  <div id="sideMenu">
+  <div id="sideMenu" class="flex-col">
     <div
       v-show="show"
       class="w-32 md:w-56 lg:w-80 fixed h-full pt-12 pb-2 transform transition-transform ease-in duration-700 bg-sideMenuBackgroundColor font-sm"
@@ -27,7 +27,7 @@
                   ></path>
                 </g>
               </svg>
-              <span>Inbox</span>
+              <span class="pl-2">Inbox</span>
             </div>
             <div>
               <span class="pr-2 text-sm text-countColor" v-show="count != 0">{{
@@ -67,7 +67,7 @@
                 </text>
               </g>
             </svg>
-            <span>Today</span>
+            <span class="pl-2">Today</span>
           </router-link>
         </li>
         <li
@@ -91,10 +91,9 @@
                 ></path>
               </g>
             </svg>
-            <span>Upcoming</span>
+            <span class="pl-2">Upcoming</span>
           </router-link>
         </li>
-
         <li
           :class="{ 'bg-gray-200 rounded-md': this.path == '/filterlabel' }"
           class="py-2 hover:bg-gray-200 mx-3 hover:rounded-md"
@@ -121,8 +120,43 @@
                 fill="currentColor"
               ></path>
             </svg>
-            <span>Filters & Labels</span>
+            <span class="pl-2">Filters & Labels</span>
           </router-link>
+        </li>
+        <li>
+          <div id="project-container" class="flex-col">
+            <div class="flex justify-between">
+              <div class="pt-3 pl-4 w-1/3">Projects</div>
+              <div
+                id="project-buttons"
+                class="flex pt-3 pr-4 justify-between w-1/5 text-gray-500 text-base"
+              >
+                <div
+                  class="hover:bg-gray-200 transistion ease-in duration-200 rounded"
+                >
+                  <span>
+                    <span class="fa fa-add w-4 h-4"></span>
+                  </span>
+                </div>
+                <div
+                  @click="chevron = !chevron"
+                  class="hover:bg-gray-200 transistion ease-in duration-200 rounded"
+                >
+                  <span v-show="!chevron" class="">
+                    <span class="fa fa-chevron-left w-4 h-4"> </span>
+                  </span>
+                  <span v-show="chevron">
+                    <span class="fa fa-chevron-down w-4 h-4"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h1 v-show="chevron" class="text-xs pt-4 pl-4">
+                Archived projects
+              </h1>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
@@ -136,6 +170,7 @@ export default {
   data() {
     return {
       count: 0,
+      chevron: false,
     };
   },
   props: {
@@ -146,6 +181,12 @@ export default {
     path: {
       type: String,
       required: true,
+    },
+  },
+  computed: {
+    sho() {
+      console.log(this.chevron);
+      return this.chevron;
     },
   },
   created() {
