@@ -1,28 +1,56 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <nav-bar v-bind:show="show" @toggleSideMenu="showHideSideMenu($event)" />
+    <div class="flex">
+      <!-- <side-menu
+        :class="{
+          ['w-1/3 ,m-0 , transition ease-linear delay-700']: show,
+          ['invisible w-1/4']: !show,
+        }"
+        v-bind:show="show"
+      /> -->
+      <component
+        :class="{
+          ['w-1/3 ,m-0 , transition ease-linear delay-700']: show,
+          ['invisible w-1/4']: !show,
+        }"
+        v-bind:path="path"
+        v-bind:show="show"
+        :is="'side-menu'"
+      ></component>
+      <router-view class="w-2/3"></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NavBar from "./components/NavBar.vue";
+import SideBar from "./components/sideMenu.vue";
 
 export default {
-  name: 'App',
+  name: "App",
+  data() {
+    return {
+      show: true,
+    };
+  },
   components: {
-    HelloWorld
-  }
-}
+    "nav-bar": NavBar,
+    "side-menu": SideBar,
+  },
+  methods: {
+    showHideSideMenu(updatedShow) {
+      this.show = !updatedShow;
+    },
+  },
+  computed: {
+    path: {
+      get() {
+        return this.$route.path;
+      },
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style src="./assets/tailwind.css"></style>

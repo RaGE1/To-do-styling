@@ -1,0 +1,410 @@
+<template>
+  <div class="flex-col">
+    <div class="flex justify-between max-w-3xl pt-8">
+      <div id="heading">
+        <h1>
+          <span class="text-lg font-bold">Today</span>
+        </h1>
+      </div>
+      <div id="buttons">
+        <div>
+          <ul class="flex">
+            <li class="px-2">
+              <button class="flex">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M15 14.5a2 2 0 011.936 1.498L19.5 16a.5.5 0 010 1l-2.563.001a2.001 2.001 0 01-3.874 0L4.5 17a.5.5 0 010-1l8.564-.002A2 2 0 0115 14.5zm-.982 1.81l.005-.025-.005.026-.003.014-.004.025-.007.061A.897.897 0 0014 16.5l.008.125.007.047-.001.002.003.014.006.024h-.001l.004.018.016.058.007.021.004.013.009.026.013.033.012.027-.011-.026.019.043-.008-.017.029.06-.018-.037.048.09a1 1 0 001.784-.155l.015-.039.006-.018-.015.039.022-.06-.001-.001.016-.057.004-.018.005-.024.001-.006v-.001l.005-.033.008-.06A.877.877 0 0016 16.5l-.008-.124-.007-.051-.001-.001-.003-.014-.01-.047-.004-.016-.007-.024-.01-.034-.004-.012-.01-.03-.006-.013-.007-.017-.01-.026a.998.998 0 00-1.843.043l-.014.034-.007.022-.014.047-.002.009v.001l-.005.016-.01.047zM9 9.5a2 2 0 011.936 1.498L19.5 11a.5.5 0 010 1l-8.563.001a2.001 2.001 0 01-3.874 0L4.5 12a.5.5 0 010-1l2.564-.002A2 2 0 019 9.5zm0 1a.998.998 0 00-.93.634l-.014.034-.007.022-.014.047-.002.009v.001l-.005.016-.01.047.005-.025-.005.026-.003.014-.004.025-.007.061C8 11.441 8 11.471 8 11.5l.008.125.007.047-.001.002.003.014.006.024h-.001l.004.018.016.058.007.021.004.013.009.026.013.033.012.027-.011-.026.019.043-.008-.017.029.06-.018-.037.048.09a1 1 0 001.784-.155l.015-.039.006-.018-.015.039.022-.06-.001-.001.016-.057.004-.018.005-.024.001-.006v-.001l.005-.033.008-.06A.877.877 0 0010 11.5l-.008-.124-.007-.051-.001-.001-.003-.014-.01-.047-.004-.016-.007-.024-.01-.034-.004-.012-.01-.03-.006-.013-.007-.017-.01-.026A1.002 1.002 0 009 10.5zm6-6a2 2 0 011.936 1.498L19.5 6a.5.5 0 010 1l-2.563.001a2.001 2.001 0 01-3.874 0L4.5 7a.5.5 0 010-1l8.564-.002A2 2 0 0115 4.5zm0 1a.998.998 0 00-.93.634l-.014.034-.007.022-.014.047-.002.009v.001l-.005.016-.01.047.005-.025-.005.026-.003.014-.004.025-.007.061C14 6.441 14 6.471 14 6.5l.008.125.007.047-.001.002.003.014.006.024h-.001l.004.018.016.058.007.021.004.013.009.026.013.033.012.027-.011-.026.019.043-.008-.017.029.06-.018-.037.048.09a1 1 0 001.784-.155l.015-.039.006-.018-.015.039.022-.06-.001-.001.016-.057.004-.018.005-.024.001-.006v-.001l.005-.033.008-.06C16 6.557 16 6.528 16 6.5l-.008-.124-.007-.051-.001-.001-.003-.014-.01-.047-.004-.016-.007-.024-.01-.034-.004-.012-.01-.03-.006-.013-.007-.017-.01-.026A1.002 1.002 0 0015 5.5z"
+                    fill="currentColor"
+                    fill-rule="nonzero"
+                  ></path>
+                </svg>
+                <span>View</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col space-y-4 justify-between max-w-3xl">
+      <div class="border">
+        <input
+          type="text"
+          v-model="task"
+          class="min-w-full pl-[2rem] border-slate-700 border focus:ring-0"
+          placeholder="Enter a New task title"
+        />
+        <input
+          type="text"
+          v-model="taskdescription"
+          class="min-w-full pl-[2rem] h-24 border-slate-700 border-none focus:ring-0"
+          placeholder="Enter task's description(otional)"
+        />
+      </div>
+      <div>
+        <div id="addresetbtn" class="flex space-x-1 justify-end">
+          <button
+            @click="CancelTask"
+            class="bg-cnclBtnColor hover:bg-cnclBtnHoverColor text-gray font-bold py-2 px-4 rounded"
+          >
+            Cancel
+          </button>
+          <button
+            v-if="!update"
+            @click="submitTask"
+            class="bg-btnColor hover:bg-btnhovorColor text-white font-bold py-2 px-4 rounded"
+          >
+            Add task
+          </button>
+          <button
+            v-if="update"
+            @click="submitTask"
+            class="bg-yellow-400 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="pt-3 max-w-3xl overflow-x'">
+      <table class="table-auto overflow-scroll w-full">
+        <thead>
+          <tr>
+            <!-- <th class="p-3 text-sm font-semibold tracking-wide text-left">
+              Task
+            </th>
+            <th class="p-3 text-sm font-semibold tracking-wide text-left">
+              Status
+            </th>
+            <th class="p-3 text-sm font-semibold tracking-wide text-left">
+              Edit
+            </th>
+            <th class="p-3 text-sm font-semibold tracking-wide text-left">
+              Delete
+            </th> -->
+            <th
+              v-for="(col, index) in columns"
+              :key="index"
+              class="border-2 p-2 cursor-pointer"
+              v-on:click="sortRecords(index)"
+            >
+              {{ col }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(task, index) in filteredTasks"
+            class="border-2 text-center p-2"
+            :key="index"
+          >
+            <td @mouseover="showDesc = true" @mouseleave="showDesc = false">
+              <span
+                class="block bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300"
+                :class="{ finished: task.status === 'Finished' }"
+                >{{ task.name }}
+                <span
+                  v-show="showDesc && task.description.length != 0"
+                  class="block"
+                  >{{ task.description }}</span
+                >
+              </span>
+            </td>
+            <td
+              class="pointer"
+              :class="{
+                'bg-red-500': task.status === 'To-do',
+                'bg-orange-500': task.status === 'In-progress',
+                'bg-green-500': task.status === 'Finished',
+              }"
+              style="width: 120px"
+            >
+              <span @click="changeStatus(index)">{{ task.status }}</span>
+            </td>
+            <td>
+              <div
+                class="text-center hover:bg-slate-200 transition ease-linear duration-150"
+                @click="editTask(task)"
+              >
+                <span
+                  class="fa fa-pen hover:text-yellow-400 hover:h-5 hover:pt-1 hover:transition ease-in duration-500"
+                ></span>
+              </div>
+            </td>
+            <td>
+              <div
+                class="text-center hover:bg-slate-200 transition ease-linear duration-150"
+                @click="deleteTask(task)"
+              >
+                <span
+                  class="fa fa-trash hover:text-red-400 hover:h-5 hover:pt-1 hover:transition ease-in duration-500"
+                ></span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <Pagination
+          v-bind:tasks="tasks"
+          v-bind:currentPage="currentPage"
+          v-bind:pageSize="pageSize"
+          v-on:page:update="updatePageNumber"
+        ></Pagination>
+      </div>
+    </div>
+    <div>
+      <div v-show="tasks.length == 0">
+        <svg
+          viewBox="0 0 880 800"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            opacity="0.28"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M218.089 418.662c6.068 0 11.018-4.95 11.018-11.017 0-6.068-4.95-11.018-11.018-11.018H90.305c-6.068 0-11.018 4.95-11.018 11.018 0 6.067 4.95 11.017 11.018 11.017h127.784zm370.857 0c6.068 0 11.018-4.95 11.018-11.017 0-6.068-4.95-11.018-11.018-11.018H567.07c-6.068 0-11.018 4.95-11.018 11.018 0 6.067 4.95 11.017 11.018 11.017h21.876zm178.522 0c6.068 0 11.018-4.95 11.018-11.017 0-6.068-4.95-11.018-11.018-11.018H636.85c-6.068 0-11.018 4.95-11.018 11.018 0 6.067 4.95 11.017 11.018 11.017h130.618zM160.325 454.75c4.87 0 8.822-3.952 8.822-8.822 0-4.87-3.952-8.822-8.822-8.822h-18.363c-4.871 0-8.823 3.952-8.823 8.822 0 4.87 3.952 8.822 8.823 8.822h18.363zm562.233 0c4.87 0 8.822-3.952 8.822-8.822 0-4.87-3.952-8.822-8.822-8.822h-22.275c-4.87 0-8.823 3.952-8.823 8.822 0 4.87 3.953 8.822 8.823 8.822h22.275zm-518.122 25.23c5.469-.28 4.511-7.306.439-7.944H79.287c-5.788.279-4.271 7.744 0 7.944h125.149zm527.144 14.57c4.032.28 4.591 7.625 0 7.984-12.176.28-25.988 2.436-27.864-2.554-.878-2.356.918-5.23 3.553-5.39a496.7 496.7 0 0124.351 0l-.04-.04zm-89.141 85.629c-9.98-6.308-16.248-17.405-16.248-29.501v-33.373c0-14.052-5.149-27.186-13.892-37.325h150.978c4.71-.36 4.59-7.026.598-7.944H603.836a56.398 56.398 0 00-17.285-9.102 75.097 75.097 0 01-17.246-8.144h89.341c4.87 0 8.823-3.952 8.823-8.822 0-4.87-3.953-8.823-8.823-8.823H550.383a72.984 72.984 0 01-11.497-22.714l-11.417-37.645h196.327c10.219 0 18.483-8.303 18.483-18.483 0-10.179-8.304-18.483-18.483-18.483h-40.359c-.44-19.64-17.964-35.488-39.521-35.488-10.938 0-20.878 4.071-28.024 10.698-5.749-22.195-28.703-39.042-56.367-39.481-13.014-.199-25.15 3.234-34.97 9.262-23.393-22.475-55.369-36.328-90.618-36.328-30.06 0-57.765 10.1-79.761 26.986-10.738-7.864-24.351-12.574-39.121-12.574-30.898 0-56.647 20.558-61.956 47.624-7.665-7.225-18.284-11.696-29.98-11.696-23.433 0-42.475 17.964-42.475 40.079 0 1.038.04 2.076.12 3.074h-37.445c-10.18 0-18.483 8.264-18.483 18.483 0 10.22 8.263 18.483 18.483 18.483h178.163l-3.793 17.645H262.4c-6.068 0-11.018 4.95-11.018 11.018 0 6.067 4.95 11.018 11.018 11.018h50.539l-3.034 14.011a59.748 59.748 0 01-1.118 4.432H204.676c-4.87 0-8.822 3.952-8.822 8.822 0 4.87 3.952 8.822 8.822 8.822h96.606a74.405 74.405 0 01-13.972 17.246h-62.994c-5.788.319-4.271 7.744 0 7.984h52.495c-1.237.798-2.515 1.517-3.792 2.235-8.783 4.831-18.523 10.18-27.824 15.29-24.471 13.453-38.443 40.359-35.369 68.143.638 5.709 1.277 11.337 1.836 16.567 1.597 14.491-8.264 27.784-22.635 30.379-17.125 3.114-30.539 16.447-33.812 33.533-.559 2.914-1.118 5.788-1.597 8.503a21.32 21.32 0 01-17.445 17.046c-1.876.319-3.832.638-5.828.958-11.258 1.876-20 10.219-22.635 20.798-8.303-4.192-15.928-9.86-22.475-16.766-15.609-16.607-23.513-39.002-21.716-61.717 1.517-19.361 3.034-38.962 4.311-55.369 2.076-26.786-.878-53.692-8.782-79.361-26.667-86.826.798-181.157 69.9-240.079.439-.359.878-.758 1.317-1.117 86.586-73.733 205.947-95.689 313.053-57.565 45.389 16.367 91.656 25.788 139.121 25.429 75.648-.798 146.666 36.287 189.221 98.802 9.261 13.293 18.483 26.826 27.305 39.8 38.403 56.407 43.273 129.221 12.774 190.259a133.313 133.313 0 00-14.091 59.64v19.322a84.723 84.723 0 01-24.87 59.96c-13.054 13.014-40.839 21.996-43.673 23.113v.08c-.319.08-.319 0 0-.08v-1.197c0-12.016-7.425-22.755-18.683-26.946-1.716-.639-3.433-1.278-5.109-1.916-9.102-3.434-14.851-12.456-14.012-22.156.279-3.114.519-6.467.838-9.9 1.597-19.441-9.381-37.725-27.305-45.389l-15.13-6.467c6.906-9.98 14.691-19.322 23.273-27.825 3.474-3.393-2.115-9.181-6.067-5.309-9.062 8.942-17.246 18.882-24.471 29.501v.04z"
+            class="fill-bannercolor"
+          ></path>
+          <path
+            d="M385.593 293.513c10.02.998 3.593 6.706-1.237 8.702-29.701 12.775-53.334 40.04-53.413 73.852 0 0-.32 2.675-2.316 3.593-6.147 2.835-6.507-14.052-1.317-29.022 9.022-25.988 30.658-46.546 56.567-56.886 0 0 .838-.279 1.716-.279v.04zM355.254 402.335c.439.08.798.28 1.118.559 4.63 4.032 10.938 6.268 16.726 5.549 2.316-.279 2.635 1.198 2.635 1.198l-1.198 2.554c-4.511 2.835-10.259 3.793-15.289 1.557 0 0-4.711-2.634-7.385-7.265-.28-.479-.359-1.038-.28-1.597 0-.199.08-.439.12-.718.12-.639.479-1.238 1.038-1.597.559-.36 1.198-.519 1.876-.36l.719.16-.08-.04zM430.983 405.169a2.34 2.34 0 011.836 1.637c.239.878 0 1.796-.719 2.395-6.347 5.429-14.371 9.7-23.113 7.305-2.475-.678-7.146-4.311-9.062-5.868-.519-.439-.839-1.078-.799-1.756 0-.679.36-1.318.919-1.717.558-.399 1.237-.559 1.916-.399 4.271 1.038 12.614 2.794 16.886 2.155 4.99-.758 11.896-3.712 11.896-3.712h.24v-.04z"
+            class="fill-bannercolor"
+          ></path>
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M375.773 451.197c-.838-.079-1.677.28-2.156.959a2.367 2.367 0 00-.199 2.355c2.275 4.431 6.986 11.257 15.489 11.018 7.784-.2 16.247-8.383 21.636-14.651.759-.758.839-1.956.28-2.834a2.263 2.263 0 00-2.715-.839c-7.345 2.555-19.002 5.43-32.335 3.992z"
+            class="fill-bannercolor"
+          ></path>
+          <path
+            d="M345.234 596.307c17.046-19.96 31.217-43.992 40.159-72.854 1.278-4.152 2.236-7.864 2.914-11.337a4 4 0 014.711-3.114 4 4 0 013.114 4.71 130.303 130.303 0 01-3.114 12.136c-8.982 29.022-23.074 53.333-40.04 73.653 39.242 14.61 84.79 12.055 121.557-8.703 0 0 .798-.519 2.235-.519 4.192.519 5.988 5.11-.359 8.583-39.162 21.197-87.744 23.433-129.022 7.026-8.902 9.86-18.482 18.762-28.423 26.706 4.112 1.637 8.384 3.234 12.495 4.431 42.395 12.296 88.463 11.777 131.297.439 0 0 13.054 4.871-.998 8.503-49.62 12.495-103.632 12.136-150.618-7.345-11.337 8.423-23.074 15.729-34.81 22.036 49.94 18.802 105.029 24.471 158.562 20.199 0 0 11.697 1.238 6.188 6.587-1.597 1.517-4.431 1.278-7.066 1.517-56.886 4.312-114.85-2.116-167.145-23.353-20.04 9.98-39.641 17.245-56.727 22.475a4.005 4.005 0 01-4.99-2.675 4.006 4.006 0 012.675-4.99c14.97-4.551 31.936-10.698 49.381-18.962a702.104 702.104 0 01-5.469-2.515c-9.82-4.63-3.074-9.022 0-8.702 2.795.718 3.154 1.357 4.631 2.036a296.751 296.751 0 0010.299 4.511c12.096-6.228 24.311-13.453 36.128-21.916a168.844 168.844 0 01-6.028-2.994c-9.142-4.751-2.435-8.623.439-8.503 1.836.319 6.986 2.754 13.493 5.628 10.14-7.864 19.96-16.646 29.022-26.506a255.017 255.017 0 01-3.274-1.557c-7.744-3.833-6.107-12.056 2.555-7.625 2.076 1.038 4.152 1.996 6.268 2.954l-.04.04z"
+            class="fill-bannercolor"
+          ></path>
+          <path
+            opacity="0.53"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M345.833 370.04s2.196 17.605 1.477 26.667c-.718 9.061-12.295 42.435 0 65.468 14.731 27.585 40.599 48.623 94.97 21.517 46.148-23.034 69.86-81.636 43.473-86.307-17.445-3.074-29.102 27.345-29.102 27.345s-17.205-30.179-17.325-49.7c0 0-17.285 7.705-45.15 8.064-21.836.279-37.924-4.99-48.343-13.014v-.04zm303.911 213.692l15.13 6.467c17.924 7.665 28.902 25.948 27.305 45.389-.279 3.433-.559 6.786-.838 9.9a21.747 21.747 0 0014.012 22.156 757.42 757.42 0 005.11 1.916c11.257 4.231 18.682 14.97 18.682 26.946v1.277a85.11 85.11 0 01-16.327 1.597h-29.501l-10.299.08-33.613-3.114a219.274 219.274 0 0113.693-48.702c6.666-16.208 20.718-34.331 11.736-36.288-2.794-.279-4.032 1.837-5.189 3.992-13.454 25.11-23.593 52.296-28.264 80.28l-16.607-1.517c-1.237-.12-2.435-.24-3.632-.36 3.273-39.201 16.487-78.003 38.602-109.979v-.04zm-46.467 108.942c-92.574-14.092-162.594-92.775-164.789-187.465-.16-6.706-.24-10.619-.24-10.619-22.355 32.895-49.022 30.06-49.022 30.06-36.047 126.786-172.494 166.387-228.462 175.768-6.227.519-12.335 1.038-18.323 1.637-12.136-.16-23.992-2.874-34.81-7.944 2.435-10.899 11.337-19.561 22.794-21.477 1.996-.32 3.952-.639 5.828-.958a21.32 21.32 0 0017.445-17.046c.519-2.675 1.078-5.549 1.597-8.503 3.274-17.086 16.687-30.419 33.812-33.533 14.332-2.595 24.232-15.888 22.635-30.379-.599-5.23-1.198-10.898-1.836-16.567-3.074-27.784 10.858-54.69 35.369-68.143 9.301-5.11 19.042-10.499 27.824-15.29 18.882-10.379 32.335-28.463 36.886-49.54 4.072-18.923 9.381-43.513 14.491-67.186 10.1-46.906 52.255-79.88 100.199-78.403 1.717.04 3.394.12 5.11.16 42.635 1.317 79.68 29.7 92.056 70.499 5.908 19.441 12.095 39.88 17.165 56.686a73.387 73.387 0 0047.665 48.503c23.632 7.585 39.64 29.581 39.64 54.371v33.373c0 12.096 6.228 23.154 16.248 29.501-22.236 32.694-35.769 72.295-39.242 112.534l-.04-.039z"
+            class="fill-bannercolor"
+          ></path>
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M683.676 529.68c4.751-1.038 9.462 2.036 10.499 6.786 1.038 4.751-2.035 9.462-6.786 10.499-4.75 1.038-9.461-2.035-10.499-6.786-1.038-4.75 2.036-9.461 6.786-10.499zm-18.762 1.038c-10.18-8.742-16.008-18.643-13.054-22.076 2.954-3.433 13.613.878 23.793 9.621-.998-13.373 1.876-24.511 6.387-24.87 4.511-.32 9.022 10.259 10.02 23.632 8.742-10.179 18.642-16.007 22.075-13.053 3.434 2.954-.878 13.612-9.62 23.792 13.373-.998 24.511 1.876 24.87 6.387.359 4.511-10.26 9.022-23.633 10.02 10.18 8.743 16.008 18.643 13.054 22.076-2.954 3.433-13.613-.878-23.792-9.621.998 13.373-1.837 24.511-6.387 24.87-4.511.32-9.022-10.259-10.02-23.632-8.743 10.179-18.643 16.008-22.076 13.053-3.433-2.954.878-13.612 9.621-23.792-13.374.998-24.511-1.876-24.871-6.387-.319-4.511 10.26-9.022 23.633-10.02zM382.4 393.154c-.439-3.114-2.475-4.311-4.192-1.996-.958 1.277-1.038 2.834-1.118 5.469-.08 1.996-.838 5.07-1.357 6.986-1.357 5.269-3.713 9.78-5.868 14.731-1.557 3.592-3.074 6.946-3.034 11.097 0 3.553 1.637 6.188 3.952 8.663 1.078 1.118 2.794 2.435 4.591 3.194 1.916.798 4.391.359 4.311-2.396-.08-3.113-5.269-5.429-5.07-8.622.08-1.438.719-3.753 1.158-5.07 1.198-3.553 2.874-6.946 3.992-10.499 1.317-4.272 3.593-14.811 2.675-21.597l-.04.04z"
+            class="fill-bannercolor"
+          ></path>
+        </svg>
+        <h1>All clear Looks like everything's organized in the right place.</h1>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { bus } from "../main";
+import Pagination from "./Pagination.vue";
+export default {
+  name: "TodoApp",
+  data() {
+    return {
+      task: "",
+      update: false,
+      term: "",
+      status: "",
+      taskdescription: "",
+      editedTask: null,
+      availableStatus: ["To-do", "In-progress", "Finished"],
+      tasks: [
+        {
+          name: "something",
+          description: "some description",
+          status: "finished",
+        },
+      ],
+      columns: ["Task", "Status", "Edit", "Delete"],
+      sortIndex: null,
+      sortDirectioin: null,
+      currentPage: 0,
+      pageSize: 5,
+      visibleTodos: [],
+      temp: [],
+      nextId: 0,
+      showDesc: false,
+    };
+  },
+  components: {
+    Pagination,
+  },
+  beforeMount() {
+    this.updateVisibleTodos();
+  },
+  methods: {
+    updatePageNumber(num) {
+      this.currentPage = num;
+    },
+    updatePage(pageNumber) {
+      this.currentPage = pageNumber;
+      this.updateVisibleTodos();
+    },
+    updateVisibleTodos(db = this.tasks) {
+      this.visibleTodos = db.slice(
+        this.pageSize * this.currentPage,
+        this.currentPage * this.pageSize + this.pageSize
+      );
+      if (this.visibleTodos.length == 0 && this.currentPage > 0) {
+        this.updatePage(this.currentPage - 1);
+      }
+      return this.visibleTodos;
+    },
+    submitTask() {
+      this.update = false;
+
+      if (this.task.length == 0) {
+        alert("Empty task title cannot be submitted");
+        return;
+      }
+      if (this.editedTask == null) {
+        this.nextId++;
+        this.tasks.push({
+          id: this.nextId,
+          name: this.task,
+          description: this.taskdescription,
+          status: "To-do",
+        });
+      } else {
+        this.tasks[this.editedTask.id].name = this.task;
+        this.tasks[this.editedTask.id].description = this.taskdescription;
+        this.tasks[this.editedTask.id].status = this.editedTask.status;
+        this.editedTask = null;
+      }
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+      bus.$emit("count", this.tasks.length);
+      this.updateVisibleTodos();
+      this.task = "";
+      this.taskdescription = "";
+    },
+    CancelTask() {
+      this.update = false;
+      this.task = "";
+      this.taskdescription = "";
+      this.editedTask = null;
+    },
+    editTask(editT) {
+      this.update = true;
+      this.task = editT.name;
+      this.taskdescription = editT.description;
+      this.status = editT.status;
+      this.editedTask = editT;
+
+      const idx = this.visibleTodos.indexOf(editT);
+      this.visibleTodos.splice(idx, 1);
+    },
+    changeStatus(index) {
+      let newIndex = this.availableStatus.indexOf(
+        this.visibleTodos[index].status
+      );
+      this.visibleTodos[index].status =
+        this.availableStatus[(newIndex + 1) % 3];
+      localStorage.clear();
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    },
+    serialize() {
+      let cnt = 0;
+      this.tasks.forEach((item) => {
+        item.id = cnt++;
+      });
+    },
+    randomfunc(data) {
+      console.log(data);
+    },
+    deleteTask(index) {
+      this.nextId--;
+
+      this.tasks.splice(this.tasks.indexOf(index), 1);
+      this.visibleTodos.splice(this.visibleTodos.indexOf(index), 1);
+      localStorage.clear();
+      this.serialize();
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+      bus.$emit("count", this.tasks.length);
+      this.updateVisibleTodos();
+    },
+    sortRecords(idx) {
+      if (idx > 1) return;
+      if (this.sortIndex == idx) {
+        switch (this.sortDirectioin) {
+          case null:
+            this.sortDirectioin = "asc";
+            break;
+          case "asc":
+            this.sortDirectioin = "desc";
+            break;
+          case "desc":
+            this.sortDirectioin = null;
+            break;
+        }
+      } else {
+        this.sortDirectioin = "asc";
+      }
+      this.sortIndex = idx;
+
+      if (this.sortDirectioin == null) {
+        this.tasks = JSON.parse(localStorage.getItem("tasks"));
+        return;
+      }
+
+      let sortTerm = "";
+      if (idx == 0) {
+        sortTerm = "name";
+      } else if (idx == 1) {
+        sortTerm = "status";
+      }
+      this.tasks = this.tasks.sort((rowA, rowB) => {
+        if (this.sortDirectioin == "asc") {
+          return rowA[sortTerm].localeCompare(rowB[sortTerm]);
+        } else if (this.sortDirectioin == "desc") {
+          return rowB[sortTerm].localeCompare(rowA[sortTerm]);
+        }
+      });
+    },
+  },
+  computed: {
+    filteredTasks() {
+      const test = this.tasks.filter((task) => {
+        return (
+          task.name.match(this.term) ||
+          task.description.match(this.term) ||
+          task.status.match(this.term)
+        );
+      });
+      bus.$emit("searchingPagination", test.length);
+      return this.updateVisibleTodos(test);
+    },
+  },
+  created() {
+    this.tasks = JSON.parse(localStorage.getItem("tasks"));
+    this.nextId = this.tasks.length - 1;
+    bus.$on("search", (data) => {
+      console.log("search called");
+      this.term = data;
+    });
+    bus.$on("delete", (data) => {
+      console.log("delete called", data);
+      this.randomfunc(data);
+    });
+  },
+};
+</script>
+
+<style>
+.pointer {
+  cursor: pointer;
+}
+.finished {
+  text-decoration: line-through;
+}
+</style>
