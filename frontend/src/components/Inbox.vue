@@ -74,7 +74,7 @@
       >
         <span class="fa fa-add w-4 h-4 pb-2"></span>
       </span>
-      <div class="pl-2 text-sm">Add task {{ showCircle }}</div>
+      <div class="pl-2 text-sm">Add task</div>
     </router-link>
     <div>
       <div v-for="(task, idx) in tasks" :key="idx">
@@ -138,27 +138,43 @@
         </div>
       </div>
     </div>
-    <div></div>
+    <div>testing...</div>
   </div>
 </template>
 
 <script>
 import { bus } from "../main";
+import serializeMixin from "../mixins/serializeMixin";
 export default {
   data() {
     return {
       tasks: [],
+      nextId: 0,
       showCircle: false,
     };
   },
+  mixins: [serializeMixin],
   methods: {
-    callDelete(task) {
-      console.log("delete called form inbox", task);
-      bus.$emit("delete", task);
+    callDelete(data) {
+      const srch = this.tasks.indexOf(data);
+      if (srch == -1) {
+        console.log("something is wrong");
+        return;
+      }
+      this.tasks.splice(srch, 1);
+      localStorage.clear();
+      this.serialize();
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+      bus.$emit("count", this.tasks.length);
     },
   },
   created() {
     this.tasks = JSON.parse(localStorage.getItem("tasks"));
+  },
+  computed: {
+    updatedTasks() {
+      return this.tasks;
+    },
   },
 };
 </script>

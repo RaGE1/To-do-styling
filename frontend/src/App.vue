@@ -23,6 +23,7 @@
         :class="{
           [' w-1/2 pl-12']: !show,
         }"
+        v-bind:someId="someId"
       ></router-view>
     </div>
   </div>
@@ -37,6 +38,7 @@ export default {
   data() {
     return {
       show: true,
+      someId: 0,
     };
   },
   components: {
