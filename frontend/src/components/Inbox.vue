@@ -91,7 +91,7 @@
       </div>
     </div>
     <div class="filler-content">
-      <div v-show="tasks.length == 0" class="flex-col mx-auto w-44 h-44">
+      <div v-show="!bool_tasks_len" class="flex-col mx-auto w-44 h-44">
         <svg
           viewBox="0 0 880 800"
           fill="none"
@@ -132,13 +132,14 @@
             class="fill-bannercolor"
           ></path>
         </svg>
-        <div class="text-center text-sm text-gray-500 w-56">All clear</div>
-        <div class="text-center text-sm text-gray-500 w-56">
-          Looks like everything's organized in the right place.
+        <div>
+          <div class="text-center text-sm text-gray-500 w-56">All clear</div>
+          <div class="text-center text-sm text-gray-500 w-56">
+            Looks like everything's organized in the right place.
+          </div>
         </div>
       </div>
     </div>
-    <div>testing...</div>
   </div>
 </template>
 
@@ -149,27 +150,62 @@ export default {
   data() {
     return {
       tasks: [],
-      nextId: 0,
       showCircle: false,
     };
   },
   mixins: [serializeMixin],
   methods: {
-    callDelete(data) {
+    async callDelete(data) {
       const srch = this.tasks.indexOf(data);
       if (srch == -1) {
         console.log("something is wrong");
         return;
       }
       this.tasks.splice(srch, 1);
-      localStorage.clear();
-      this.serialize();
-      localStorage.setItem("tasks", JSON.stringify(this.tasks));
-      bus.$emit("count", this.tasks.length);
+      await fetch("http://localhost:3000/" + data._id, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + document.cookie,
+        },
+      });
+      if (this.tasks) bus.$emit("count", this.tasks.length);
+    },
+    bool_tasks_len() {
+      if (this.tasks) {
+        return this.tasks.length == 0;
+      } else {
+        return false;
+      }
     },
   },
-  created() {
-    this.tasks = JSON.parse(localStorage.getItem("tasks"));
+  async created() {
+    await fetch("http://localhost:3000", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + document.cookie,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          alert(
+            "Server returned " + response.status + " : " + response.statusText
+          );
+        }
+      })
+      .then((response) => {
+        if (response.todos) {
+          this.tasks = response.todos;
+        } else {
+          alert(response.message);
+          window.location.href = "http://localhost:8080/Signup";
+        }
+      })
+      .catch((err) => {
+        console.log("here", err);
+      });
+    if (this.tasks) bus.$emit("count", this.tasks.length);
   },
   computed: {
     updatedTasks() {

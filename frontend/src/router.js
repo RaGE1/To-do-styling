@@ -6,7 +6,7 @@ import Inbox from './components/Inbox.vue';
 import Today from './components/Today.vue';
 import Upcoming from './components/Upcoming.vue';
 import Filterlabel from './components/FilterLabel.vue';
-import PageNotFound from './components/pagenotfound.vue';
+// import PageNotFound from './components/pagenotfound.vue';
 
 
 Vue.use(VueRouter);
@@ -26,12 +26,12 @@ const routes = [
     {path:"/filterlabel",
     component:Filterlabel
     },
-    {
-      path: '/:catchAll(.*)*',
-      name: "PageNotFound",
-      component: PageNotFound,
-      props: true,
-    },
+    // {
+    //   path: '/:catchAll(.*)*',
+    //   name: "PageNotFound",
+    //   component: PageNotFound,
+    //   props: true,
+    // },
 ];
 
 const router = new VueRouter({

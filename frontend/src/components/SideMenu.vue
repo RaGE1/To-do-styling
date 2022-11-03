@@ -139,7 +139,7 @@
                   </span>
                 </div>
                 <div
-                  @click="chevron = !chevron"
+                  @click="toggleSideMenu"
                   class="hover:bg-gray-200 transistion ease-in duration-200 rounded"
                 >
                   <span v-show="!chevron" class="">
@@ -183,6 +183,16 @@ export default {
       required: true,
     },
   },
+  methods: {
+    async randomfunc() {
+      await fetch("http://localhost:3000", { method: "GET" }).then((res) => {
+        console.log("this is", res.json());
+      });
+    },
+    toggleSideMenu() {
+      this.chevron = !this.chevron;
+    },
+  },
   computed: {
     sho() {
       console.log(this.chevron);
@@ -190,14 +200,14 @@ export default {
     },
   },
   created() {
-    if (this.count == 0) {
-      if (localStorage.getItem("tasks") == null) {
-        this.count = 0;
-        localStorage.setItem("tasks", JSON.stringify([]));
-      } else {
-        this.count = JSON.parse(localStorage.getItem("tasks")).length;
-      }
-    }
+    // if (this.count == 0) {
+    //   if (localStorage.getItem("tasks") == null) {
+    //     this.count = 0;
+    //     localStorage.setItem("tasks", JSON.stringify([]));
+    //   } else {
+    //     this.count = JSON.parse(localStorage.getItem("tasks")).length;
+    //   }
+    // }
     bus.$on("count", (data) => {
       this.count = data;
     });

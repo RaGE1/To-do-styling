@@ -121,18 +121,11 @@
             </button>
           </li>
           <li class="px-1">
-            <button>
-              <svg
-                class="hover:bg-bannerfaded transistion ease-in duration-200 rounded"
-                xmlns="http://www.w3.org/2000/svg"
-                height="24"
-                width="24"
-                viewBox="0 0 48 48"
-              >
-                <path
-                  d="M8 38v-3h4.2V19.7q0-4.2 2.475-7.475Q17.15 8.95 21.2 8.1V6.65q0-1.15.825-1.9T24 4q1.15 0 1.975.75.825.75.825 1.9V8.1q4.05.85 6.55 4.125t2.5 7.475V35H40v3Zm16-14.75ZM24 44q-1.6 0-2.8-1.175Q20 41.65 20 40h8q0 1.65-1.175 2.825Q25.65 44 24 44Zm-8.8-9h17.65V19.7q0-3.7-2.55-6.3-2.55-2.6-6.25-2.6t-6.275 2.6Q15.2 16 15.2 19.7Z"
-                />
-              </svg>
+            <button
+              @click="logOut"
+              class="hover:bg-bannerfaded transistion ease-in duration-200 rounded"
+            >
+              <i class="fa fa-sign-out text-white" aria-hidden="true"></i>
             </button>
           </li>
         </ul>
@@ -167,14 +160,38 @@ export default {
       this.term = e.target.value;
       bus.$emit("search", this.term);
     },
+    async logOut() {
+      await fetch("http://localhost:3000/logout", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + document.cookie,
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            alert(
+              "Server returned " + response.status + " : " + response.statusText
+            );
+          }
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      this.$emit("changeAuth", false);
+      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      this.$router.push("/Signup");
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#input {
-}
 #search-id:hover #searchsvg {
   background-color: white;
   fill: gray;

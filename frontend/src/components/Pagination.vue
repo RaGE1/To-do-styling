@@ -1,12 +1,17 @@
 <template>
   <div class="flex">
-    <div v-if="totalPages() > 0" class="pagination-wrapper justify-end">
+    <div
+      v-if="totalPages() > 0"
+      class="pagination-wrapper justify-end text-2xl pt-10 flex flex-grow"
+    >
       <span
         v-if="showPreviousLink()"
-        class="pagination-btn"
+        class="fapagination-btn"
         v-on:click="updatePage(currentPage - 1)"
       >
-        &lt;
+        <i
+          class="fa-solid fa-arrow-left text-bannerfaded cursor-pointer hover:-translate-x-1 duration-150 pr-1 hover:text-bannercolor"
+        ></i>
       </span>
       {{ currentPage + 1 }} of {{ totalPages() }}
       <span
@@ -14,7 +19,9 @@
         class="pagination-btn"
         v-on:click="updatePage(currentPage + 1)"
       >
-        >
+        <i
+          class="fa-solid fa-arrow-right text-bannerfaded cursor-pointer hover:translate-x-1 duration-150 pl-1 hover:text-bannercolor"
+        ></i>
       </span>
     </div>
   </div>
@@ -32,6 +39,14 @@ export default {
     };
   },
   methods: {
+    bool_tasks_len() {
+      if (this.tasks) {
+        this.len = this.tasks.length;
+        return this.tasks.length;
+      } else {
+        return false;
+      }
+    },
     updatePage(pageNumber) {
       this.$emit("page:update", pageNumber);
     },

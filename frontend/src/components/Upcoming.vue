@@ -1,9 +1,5 @@
 <template>
   <div>
-    <h1>Hello from upcoming!</h1>
+    <h1>Hello from Upcoming</h1>
   </div>
 </template>
-
-<script>
-export default {};
-</script>
